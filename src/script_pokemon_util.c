@@ -58,14 +58,18 @@ void HealPlayerParty(void)
     }
 }
 
-u8 ScriptGiveMon(u16 species, u8 level, u16 item, u32 unused1, u32 unused2, u8 unused3)
+u8 ScriptGiveMon(u16 species, u8 level, u16 item, bool8 specialEncounter, u32 unused2, u8 unused3)
 {
     u16 nationalDexNum;
     int sentToPc;
     u8 heldItem[2];
     struct Pokemon mon;
+    u8 ivs = USE_RANDOM_IVS;
 
-    CreateMon(&mon, species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    if (specialEncounter) // Give special encounter Pokémon 3 perfect IVs
+        ivs = USE_SPECIAL_ENCOUNTER_IVS;
+
+    CreateMon(&mon, species, level, ivs, FALSE, 0, OT_ID_PLAYER_ID, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
